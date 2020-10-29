@@ -1,7 +1,10 @@
 ﻿using Confluent.Kafka;
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Worker_Consumer.Models;
+using Worker_Producer.Models;
 
 namespace Worker_Consumer
 {
@@ -9,6 +12,14 @@ namespace Worker_Consumer
     {
         public static void Main(string[] args)
         {
+            //JSON configuration
+            var options = new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true,
+                AllowTrailingCommas = true
+            };
+
             var conf = new ConsumerConfig
             {
                 GroupId = "test-consumer-group",
@@ -17,7 +28,6 @@ namespace Worker_Consumer
             };
 
             using var c = new ConsumerBuilder<Ignore, string>(conf).Build();
-
             {
                 c.Subscribe("test-topic");
 
@@ -33,8 +43,30 @@ namespace Worker_Consumer
                     {
                         try
                         {
+
                             var cr = c.Consume(cts.Token);
-                            Console.WriteLine($"Consumed message '{cr.Message.Value}'");
+                            // Console.WriteLine($"Consumed message '{cr.Message.Value}'");
+
+                            string jsonString = cr.Message.Value;
+                            var resultA = JsonSerializer.Deserialize<FundoInvest>(jsonString, options);
+                            //   var resultB = JsonSerializer.Serialize(resultA, options);
+                            var test = JsonSerializer.Deserialize<FundoInvest>(jsonString, options);
+
+
+
+                            Cotista cotista = new Cotista(resultA.opr_rec_inf.codFundo, resultA.opr_rec_inf.comunicEletr);
+                            Person pessoa = new Person(resultA.opr_rec_inf.conta, resultA.opr_rec_inf.agencia, resultA.opr_rec_inf.conta, cotista);
+                            
+                                                        
+                            Console.WriteLine($"'{pessoa.idCotist}','{pessoa.agencia}','{pessoa.conta}','{pessoa.cotista.codFundo}', '{pessoa.cotista.comunicEletr}'");
+
+
+
+
+
+                            
+
+
                         }
                         catch (ConsumeException e)
                         {
