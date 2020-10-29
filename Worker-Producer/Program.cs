@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,9 +12,25 @@ namespace Worker_Producer
     {
         public static async Task Main()
         {
+            //Random string
+            static string RandomString(int length)
+            {
+                Random random = new Random();
+                const string chars = "1234567890";
+                return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+            };
+
             var config = new ProducerConfig { BootstrapServers = "localhost:9092" };
 
             using var p = new ProducerBuilder<Null, string>(config).Build();
+
+            //Configuração JSON Serializer
+            var options = new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true,
+                AllowTrailingCommas = true
+            };
 
             {
                 try
@@ -21,8 +38,10 @@ namespace Worker_Producer
                     
                     while (true)
                     {
-                        var resultA = new FundoInvest() { FundoInvestimentos = "opc-rec-in", Tpempres = "004", CodBanco = "341", Agencia = "1403", Conta = "12222222", Dac10 = "5", Data = new DateTime(), ComunicEletr = "S", CodUsuario = 0, OpedCana = "00", CodCana = "00", TipoMovi = "N" };
-                        var resultB = JsonSerializer.Serialize(resultA);
+
+                        
+                        var resultA = new FundoInvest() { opr_rec_inf = new Dados {codFundo = RandomString(3), tpempres = "004", codBanco = RandomString(3), agencia = RandomString(4), conta = RandomString(8), dac10 = "5", data = new DateTime(), comunicEletr = "S", codUsuario = 0, opedCana = "00", codCana = "00", tipoMovi = "N" } };
+                        var resultB = JsonSerializer.Serialize(resultA, options);
 
                         var dr = await p.ProduceAsync("test-topic",
                         new Message<Null, string> { Value = $"{resultB}" });

@@ -4,10 +4,9 @@ using System.Text;
 
 namespace Worker_Producer.Models
 {
-    class FundoInvest
-    {
+    public class FundoInvest {
+    
       public Dados opr_rec_inf { get; set; }
-
       
     }
     public class Dados
@@ -25,4 +24,6 @@ namespace Worker_Producer.Models
         public string codCana { get; set; }
         public string tipoMovi { get; set; }
     }
+
+
 }
