@@ -20,6 +20,13 @@ namespace Worker_Producer
                 return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
             };
 
+            static string RandomComunic(int length)
+            {
+                Random random = new Random();
+                const string chars = "SN";
+                return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+            }
+
             var config = new ProducerConfig { BootstrapServers = "localhost:9092" };
 
             using var p = new ProducerBuilder<Null, string>(config).Build();
@@ -40,13 +47,13 @@ namespace Worker_Producer
                     {
 
                         
-                        var resultA = new FundoInvest() { opr_rec_inf = new Dados {codFundo = RandomString(3), tpempres = "004", codBanco = RandomString(3), agencia = RandomString(4), conta = RandomString(8), dac10 = "5", data = new DateTime(), comunicEletr = "S", codUsuario = 0, opedCana = "00", codCana = "00", tipoMovi = "N" } };
+                        var resultA = new FundoInvest() { opr_rec_inf = new Dados {codFundo = RandomString(3), tpempres = "004", codBanco = "341", agencia = RandomString(4), conta = RandomString(8), dac10 = "5", data = new DateTime(), comunicEletr = RandomComunic(1), codUsuario = 0, opedCana = "00", codCana = "00", tipoMovi = "N" } };
                         var resultB = JsonSerializer.Serialize(resultA, options);
 
                         var dr = await p.ProduceAsync("test-topic",
                         new Message<Null, string> { Value = $"{resultB}" });
 
-                        Console.WriteLine($"Delivered '{dr.Value}''");
+                        Console.WriteLine($"'{dr.Value}'");
 
                         Thread.Sleep(2000);
                     }
