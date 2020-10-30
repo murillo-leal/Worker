@@ -56,43 +56,26 @@ namespace Worker_Consumer
                                 //Deserializing JSON message
                                 string jsonString = cr.Message.Value;
                                 var resultA = JsonSerializer.Deserialize<FundoInvest>(jsonString, options);
-
-                                
+                                                                
                                 //Creating NEW object into database
                                 using (var db = new PersonDBContext())
                                 {
                                     var person = new Person
                                     {
-                                        agencia = resultA.opr_rec_inf.agencia,
-                                        conta = resultA.opr_rec_inf.conta,
+                                        Agencia = resultA.opr_rec_inf.agencia,
+                                        Conta = resultA.opr_rec_inf.conta,
                                         Cotista = new List<Cotista>
                                         {
-                                            new Cotista { codFundo = resultA.opr_rec_inf.codFundo, comunicEletr = resultA.opr_rec_inf.comunicEletr },
+                                            new Cotista { CodFundo = resultA.opr_rec_inf.codFundo, ComunicEletr = resultA.opr_rec_inf.comunicEletr },
 
                                         }
                                     };                            
                                     db.Person.Add(person);
                                     db.SaveChanges();
                                 
-                                    Console.WriteLine($"'{person.agencia}','{person.conta}','{person.Cotista}'");
-                                }
-
-                                                      
-;
+                                    Console.WriteLine($"'{person.Agencia}','{person.Conta}','{person.Cotista}'");
+                                };
                                 
-
-                                //Cotista cotista = new Cotista(resultA.opr_rec_inf.codFundo, resultA.opr_rec_inf.comunicEletr);
-                                //Person pessoa = new Person(resultA.opr_rec_inf.conta, resultA.opr_rec_inf.agencia, resultA.opr_rec_inf.conta, cotista);
-
-
-                                //Console.WriteLine($"'{pessoa.idCotist}','{pessoa.agencia}','{pessoa.conta}','{pessoa.cotista.codFundo}', '{pessoa.cotista.comunicEletr}'");
-
-
-
-
-
-
-
 
                             }
                             catch (ConsumeException e)

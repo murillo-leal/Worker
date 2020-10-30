@@ -47,11 +47,11 @@ namespace Worker_Producer
                     {
 
                         
-                        var resultA = new FundoInvest() { opr_rec_inf = new Dados {codFundo = RandomString(3), tpempres = "004", codBanco = "341", agencia = RandomString(4), conta = RandomString(8), dac10 = "5", data = new DateTime(), comunicEletr = RandomComunic(1), codUsuario = 0, opedCana = "00", codCana = "00", tipoMovi = "N" } };
-                        var resultB = JsonSerializer.Serialize(resultA, options);
+                        var jsonObject = new FundoInvest() { opr_rec_inf = new Dados {codFundo = RandomString(3), tpempres = "004", codBanco = "341", agencia = RandomString(4), conta = RandomString(8), dac10 = "5", data = new DateTime(), comunicEletr = RandomComunic(1), codUsuario = 0, opedCana = "00", codCana = "00", tipoMovi = "N" } };
+                        var jsonString = JsonSerializer.Serialize(jsonObject, options);
 
                         var dr = await p.ProduceAsync("test-topic",
-                        new Message<Null, string> { Value = $"{resultB}" });
+                        new Message<Null, string> { Value = $"{jsonString}" });
 
                         Console.WriteLine($"'{dr.Value}'");
 

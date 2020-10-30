@@ -13,18 +13,12 @@ namespace Worker_Consumer.Models
         [Key]
         public int PersonID  { get; set; }
         
-        public string agencia { get; set; }
+        public string Agencia { get; set; }
 
-        public string conta { get; set; }
+        public string Conta { get; set; }
              
         public  List<Cotista> Cotista { get; set; }
-
-        //public Person (string agencia, string conta, Cotista Cotista)
-        //{
-        //    this.agencia = agencia;
-        //    this.conta = conta;
-        //    _Cotista = Cotista;
-        //}
+              
 
     }
         
