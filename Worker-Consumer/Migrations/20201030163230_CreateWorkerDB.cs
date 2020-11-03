@@ -24,13 +24,15 @@ namespace Worker_Consumer.Migrations
                 name: "Cotista",
                 columns: table => new
                 {
-                    codFundo = table.Column<string>(nullable: false),
-                    comunicEletr = table.Column<string>(nullable: true),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CodFundo = table.Column<string>(nullable: true),
+                    ComunicEletr = table.Column<string>(nullable: true),
                     PersonID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cotista", x => x.codFundo);
+                    table.PrimaryKey("PK_Cotista", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Cotista_Person_PersonID",
                         column: x => x.PersonID,

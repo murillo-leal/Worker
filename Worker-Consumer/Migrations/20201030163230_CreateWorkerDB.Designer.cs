@@ -10,7 +10,7 @@ using Worker_Consumer.Models;
 namespace Worker_Consumer.Migrations
 {
     [DbContext(typeof(PersonDBContext))]
-    [Migration("20201030060554_CreateWorkerDB")]
+    [Migration("20201030163230_CreateWorkerDB")]
     partial class CreateWorkerDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,16 +23,21 @@ namespace Worker_Consumer.Migrations
 
             modelBuilder.Entity("Worker_Consumer.Models.Cotista", b =>
                 {
-                    b.Property<string>("codFundo")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CodFundo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ComunicEletr")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PersonID")
                         .HasColumnType("int");
 
-                    b.Property<string>("comunicEletr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("codFundo");
+                    b.HasKey("Id");
 
                     b.HasIndex("PersonID");
 
